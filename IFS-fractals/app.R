@@ -27,16 +27,8 @@ ui <- fluidPage(
                                      "Sierpinski Carpet","Sierpinski Pentagon","Cantor Labirynth","Tree",
                                      "Ice Crystal","Feather","Twig"),selected="I want to pick coefficients by myself!"),
             h3("...or choose coefficients by yourself!"),
-            h4("x'=ax+by+c",align="center"),
-            h4("y'=dx+ey+f",align="center"),
-            splitLayout(
-            numericInput("a","a",0.0,step=0.001),
-            numericInput("b","b",0.0,step=0.001),
-            numericInput("c","c",0.0,step=0.001)),
-            splitLayout(
-                numericInput("d","d",0.0,step=0.001),
-                numericInput("e","e",0.0,step=0.001),
-                numericInput("f","f",0.0,step=0.001)),
+            sliderInput("coef","Number of functions f(x,y):", min=1,max=8,value = 1),
+            uiOutput("functions"),
             numericInput("reps",h3("Number of iterations"),value=20000),
             colourInput("color",h3("Select color"),value="black"),
             actionButton("start","Start")
@@ -51,20 +43,68 @@ ui <- fluidPage(
 
 
 server <- function(input, output,session) {
+    output$functions <- renderUI({
+      numInd <- as.integer(input$coef)
+      lapply(1:numInd, function(i){
+        column(12,
+        h4(paste(paste0("x'",i),"= ",paste0("a",i),"x + ",paste0("b",i),"y + ",paste0("c",i), sep=""),align="center"),
+        h4(paste(paste0("y'",i),"= ",paste0("d",i),"x + ",paste0("e",i),"y + ",paste0("f",i), sep=""),align="center"),
+        splitLayout(
+          numericInput(paste0("a",i),paste0("a",i),value=1,step=0.001),
+          numericInput(paste0("b",i),paste0("b",i),step=0.001,value=0),
+          numericInput(paste0("c",i),paste0("c",i),step=0.001,value=0)),
+        splitLayout(
+          numericInput(paste0("d",i),paste0("d",i),step=0.001,value=0),
+          numericInput(paste0("e",i),paste0("e",i),step=0.001,value=1),
+          numericInput(paste0("f",i),paste0("f",i),step=0.001,value=0)))
+      })
+    }) 
     observeEvent(input$start, {
     output$selected_fractal <- renderImage({
         
        points = data.frame()
        if(input$fractal=="I want to pick coefficients by myself!"){
            fractal <- function(reps){
+               prob <- runif(reps)
                x <- 0
                y <- 0
                idx <- 0
                points = data.frame("X"=x,"Y"=y,"order"=idx)
-               for(p in 1:reps){
-                   xp <- input$a*x + input$b*y + input$c
-                   yp <- input$d*x + input$e*y + input$f
-                   
+               for(p in prob){
+                   xp <- 0
+                   yp <- 0
+                   if(p<=1/input$coef){
+                     xp <- input$a1*x + input$b1*y + input$c1
+                     yp <- input$d1*x + input$e1*y + input$f1
+                   }
+                   else if(p<=2/input$coef){
+                     xp <- input$a2*x + input$b2*y + input$c2
+                     yp <- input$d2*x + input$e2*y + input$f2
+                   }
+                   else if(p<=3/input$coef){
+                     xp <- input$a3*x + input$b3*y + input$c3
+                     yp <- input$d3*x + input$e3*y + input$f3
+                   }
+                   else if(p<=4/input$coef){
+                     xp <- input$a4*x + input$b4*y + input$c4
+                     yp <- input$d4*x + input$e4*y + input$f4
+                   }
+                   else if(p<=5/input$coef){
+                     xp <- input$a5*x + input$b5*y + input$c5
+                     yp <- input$d5*x + input$e5*y + input$f5
+                   }
+                   else if(p<=6/input$coef){
+                     xp <- input$a6*x + input$b6*y + input$c6
+                     yp <- input$d6*x + input$e6*y + input$f6
+                   }
+                   else if(p<=7/input$coef){
+                     xp <- input$a7*x + input$b7*y + input$c7
+                     yp <- input$d7*x + input$e7*y + input$f7
+                   }
+                   else{
+                     xp <- input$a8*x + input$b8*y + input$c8
+                     yp <- input$d8*x + input$e8*y + input$f8
+                   }
                    idx <- idx+1
                    points[nrow(points)+1,] = c(xp,yp,idx)
                    x <- xp
