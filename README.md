@@ -11,3 +11,5 @@ You can choose one of exemple fractals, like:
  - and more...
  
 Or you can define up to 8 own functions to generate your individual fractal.
+
+You can check out app here: https://anzajac.shinyapps.io/IFS-fractals/
